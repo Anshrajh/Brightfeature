@@ -1,1 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>SVR Public School — Modern</title>
 
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg: #eef2f7;
+    --card: #ffffff;
+    --accent: #005bbb;
+    --nav: #003f7d;
+    --muted: #666;
+    --accent-2: #0077ff;
+    color-scheme: light;
+  }
+  /* Dark theme variations provided by classes on <html> */
+  html.dark-d1 { --bg:#0f1724; --card:#0b1220; --accent:#0b3b6b; --nav:#071a33; --muted:#cbd5e1; color-scheme: dark; }
+  html.dark-d2 { --bg:#0b0b0b; --card:#111111; --accent:#1f2937; --nav:#050505; --muted:#cbd5e1; color-scheme: dark; }
+  html.dark-d3 { --bg:#120b1a; --card:#1b1423; --accent:#4b1976; --nav:#170c28; --muted:#e6d7f0; color-scheme: dark; }
+  html.dark-d4 { --bg:#07120b; --card:#0d1c12; --accent:#064e2a; --nav:#04280f; --muted:#cfead6; color-scheme: dark; }
+
+  *{box-sizing:border-box}
+  body{
+    font-family:'Poppins',system-ui,Segoe UI,Roboto,Arial,sans-serif;
+    margin:0;background:var(--bg);color:var(--muted);-webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+  }
+
+  header{
+    background:linear-gradient(180deg,var(--accent),var(--nav));
+    color:white;padding:18px 16px;display:flex;gap:12px;align-items:center;
+    justify-content:space-between;flex-wrap:wrap;
+  }
+  .brand {display:flex;align-items:center;gap:12px}
+  .brand img{height:56px;width:56px;object-fit:cover;border-radius:8px;border:2px solid rgba(255,255,255,0.15)}
+  .brand h1{margin:0;font-size:20px;letter-spacing:0.6px}
+  .brand p{margin:0;font-size:13px;opacity:0.95}
+
+  /* top-controls */
+  .top-controls{display:flex;gap:10px;align-items:center}
+  .btn {background:transparent;border:1px solid rgba(255,255,255,0.18);color:white;padding:8px 10px;border-radius:8px;font-weight:600;cursor:pointer}
+  .btn:hover{opacity:0.95;transform:translateY(-1px)}
+
+  nav{
+    display:flex;justify-content:center;background:var(--nav);position:sticky;top:0;z-index:1000;
+    box-shadow:0 4px 10px rgba(0,0,0,0.06)
+  }
+  nav ul{list-style:none;display:flex;gap:6px;padding:8px;margin:0;flex-wrap:wrap}
+  nav a{display:inline-block;padding:10px 14px;color:white;text-decoration:none;border-radius:6px;font-weight:600;transition:0.15s}
+  nav a:hover{background:var(--accent-2);transform:translateY(-2px)}
+
+  main{max-width:1100px;margin:20px auto;padding:0 14px}
+  section{background:var(--card);border-radius:12px;padding:18px;margin-bottom:18px;box-shadow:0 8px 20px rgba(2,6,23,0.06)}
+  h2{margin-top:0;color:var(--nav)}
+
+  /* slider */
+  .slider{position:relative;overflow:hidden;border-radius:10px;height:260px;display:flex;align-items:center}
+  .slides{display:flex;transition:transform .6s ease;height:100%;width:100%}
+  .slide{min-width:100%;display:flex;align-items:center;justify-content:center;background:#ddd;color:#333;font-weight:700}
+  .slide img{width:100%;height:100%;object-fit:cover}
+
+  .slider-controls{position:absolute;left:10px;right:10px;top:50%;display:flex;justify-content:space-between;transform:translateY(-50%)}
+  .control{background:rgba(0,0,0,0.35);color:white;padding:8px;border-radius:8px;cursor:pointer;border:0}
+
+  /* gallery */
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+
+  .card{padding:14px;border-radius:10px;border:1px solid rgba(0,0,0,0.04);background:var(--card);color:var(--muted)}
+  .card h3{margin:0 0 8px 0}
+  .small{font-size:13px;color:var(--muted)}
+
+  /* forms */
+  .form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  input[type="text"], input[type="password"], select{width:100%;padding:10px;border-radius:8px;border:1px solid #ccc;background:transparent}
+  button.primary{background:var(--accent);color:white;padding:10px 12px;border-radius:8px;border:none;cursor:pointer;font-weight:700}
+
+  /* search & results */
+  .results{margin-top:12px}
+  table{width:100%;border-collapse:collapse}
+  th,td{padding:8px;border-bottom:1px solid rgba(0,0,0,0.06);text-align:left}
+
+  /* map */
+  .map-wrap{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-start}
+  .map-frame{flex:1;min-height:260px;border-radius:10px;overflow:hidden;border:1px solid rgba(0,0,0,0.06)}
+  .map-frame iframe{width:100%;height:100%;border:0;display:block}
+
+  /* uploads */
+  .uploader{display:flex;gap:10px;flex-wrap:wrap}
+  .uploader input{display:none}
+  .thumb{width:120px;height:80px;border-radius:8px;object-fit:cover;border:1px dashed rgba(0,0,0,0.08)}
+
+  /* footer */
+  footer{text-align:center;padding:12px;color:var(--muted);opacity:0.9}
+
+  /* responsive */
+  @media(max-width:800px){ .form-row{grid-template-columns:1fr} .brand h1{font-size:16px} .brand p{display:none} .top-controls{flex-wrap:wrap} .slider{height:180px} }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header>
+  <div class="brand">
+    <!-- logo placeholder; you can replace src by uploaded logo -->
+    <img id="site-logo" src="data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Crect width='120' height='120' fill='%230055bb' rx='12'/%3E%3Ctext x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' font-family='Poppins,Arial' font-size='34' fill='white'%3ESVR%3C/text%3E%3C/svg%3E" alt="SVR Logo">
+    <div>
+      <h1>SVR PUBLIC SCHOOL</h1>
+      <p style="margin-top:4px;font-size:13px;color:rgba(255,255,255,0.92)">Where Knowledge Meets Excellence</p>
+    </div>
+  </div>
+
+  <div class="top-controls">
+    <button class="btn" id="themeToggle">Dark Mode</button>
+    <button class="btn" id="openLogin">Login</button>
+    <button class="btn" id="uploadAssetsBtn">Upload Logo / Photos</button>
+  </div>
+</header>
+
+<!-- Navigation -->
+<nav>
+  <ul>
+    <li><a href="#home">Home</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#academics">Academics</a></li>
+    <li><a href="#facilities">Facilities</a></li>
+    <li><a href="#notice">Notice</a></li>
+    <li><a href="#gallery">Gallery</a></li>
+    <li><a href="#teachers">Teachers</a></li>
+    <li><a href="#search">Search</a></li>
+    <li><a href="#admission">Admission</a></li>
+    <li><a href="#reportcard">Report Card</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<main>
+
+  <!-- HERO / Slider -->
+  <section id="home">
+    <div style="display:flex;gap:12px;flex-wrap:wrap">
+      <div style="flex:1">
+        <div class="slider" aria-roledescription="carousel">
+          <div class="slides" id="slides">
+            <div class="slide"><img src="https://via.placeholder.com/1200x400?text=School+Event+1" alt="slide1"></div>
+            <div class="slide"><img src="https://via.placeholder.com/1200x400?text=Sports+Day" alt="slide2"></div>
+            <div class="slide"><img src="https://via.placeholder.com/1200x400?text=Science+Exhibition" alt="slide3"></div>
+          </div>
+          <div class="slider-controls">
+            <button class="control" id="prev">‹</button>
+            <button class="control" id="next">›</button>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:10px;">
+          <button class="primary" onclick="prevSlide()">Prev</button>
+          <button class="primary" onclick="nextSlide()">Next</button>
+        </div>
+      </div>
+
+      <!-- Principal & Events -->
+      <div style="width:360px;min-width:280px;">
+        <section class="card">
+          <h3>Message from the Principal</h3>
+          <p class="small" id="principalMessage">Welcome to SVR Public School — committed to developing a strong foundation, values and creative thinking. — Principal</p>
+          <hr style="margin:12px 0;">
+          <h4 style="margin:6px 0">Upcoming Events</h4>
+          <ul id="eventsList" class="small">
+            <li>Annual Function — 25 November</li>
+            <li>Final Exams — 10 December</li>
+            <li>Science Fair — 15 January</li>
+          </ul>
+        </section>
+
+        <!-- Theme picker -->
+        <section class="card" style="margin-top:12px">
+          <h4>Theme / Dark Mode</h4>
+          <p class="small">Default: <strong>Dark Blue (D1)</strong>. Switch theme:</p>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="primary" onclick="setTheme('')">Light</button>
+            <button class="primary" onclick="setTheme('dark-d1')">D1 (Dark Blue)</button>
+            <button class="primary" onclick="setTheme('dark-d2')">D2 (Black)</button>
+            <button class="primary" onclick="setTheme('dark-d3')">D3 (Purple)</button>
+            <button class="primary" onclick="setTheme('dark-d4')">D4 (Green)</button>
+          </div>
+        </section>
+      </div>
+    </div>
+  </section>
+
+  <!-- About / Academics -->
+  <section id="about" class="card">
+    <h2>About Us</h2>
+    <p>SVR Public School is committed to providing quality education with strong discipline, modern learning experiences and a caring environment.</p>
+    <div style="display:flex;gap:12px;margin-top:10px;flex-wrap:wrap">
+      <div style="flex:1;min-width:180px" class="card">
+        <h3>Academics</h3>
+        <p class="small">Primary, Secondary, Science, Commerce & Arts — structured curriculum and experienced faculty.</p>
+      </div>
+      <div style="flex:1;min-width:180px" class="card">
+        <h3>Facilities</h3>
+        <p class="small">Smart Classes • Library • Computer Lab • Sports Ground • Bus Transport</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Notice with animated ticker -->
+  <section id="notice" class="card">
+    <h2>Notice Board</h2>
+    <div style="background:linear-gradient(90deg,#fff8f8,#fff);" class="card" aria-live="polite">
+      <div style="overflow:hidden;position:relative;height:34px;border-radius:6px;padding:6px;border:1px solid rgba(0,0,0,0.04)">
+        <div id="ticker" style="position:absolute;white-space:nowrap;will-change:transform;animation:scroll 12s linear infinite;font-weight:700;color:#c41d1d">
+          Annual Function on 25 Nov &nbsp; • &nbsp; Exams from 10 Dec &nbsp; • &nbsp; New Admissions Open!
+        </div>
+      </div>
+    </div>
+    <style>@keyframes scroll{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}</style>
+  </section>
+
+  <!-- Gallery + Upload -->
+  <section id="gallery" class="card">
+    <h2>Gallery</h2>
+    <div style="display:flex;gap:12px;flex-wrap:wrap">
+      <div style="flex:1">
+        <div class="grid" id="galleryGrid">
+          <div class="card"><img class="thumb" src="https://via.placeholder.com/320x180?text=Image+1" alt="g1"></div>
+          <div class="card"><img class="thumb" src="https://via.placeholder.com/320x180?text=Image+2" alt="g2"></div>
+          <div class="card"><img class="thumb" src="https://via.placeholder.com/320x180?text=Image+3" alt="g3"></div>
+          <div class="card"><img class="thumb" src="https://via.placeholder.com/320x180?text=Image+4" alt="g4"></div>
+        </div>
+      </div>
+      <div style="width:320px;min-width:260px">
+        <section class="card">
+          <h3>Upload Photos / Logo</h3>
+          <p class="small">Upload your logo and gallery photos — they will preview immediately on the page.</p>
+          <div class="uploader">
+            <label style="cursor:pointer">
+              <input type="file" id="logoInput" accept="image/*">
+              <div style="padding:8px;border-radius:8px;border:1px dashed rgba(0,0,0,0.08);display:inline-block">Choose Logo</div>
+            </label>
+            <label style="cursor:pointer">
+              <input type="file" id="photosInput" accept="image/*" multiple>
+              <div style="padding:8px;border-radius:8px;border:1px dashed rgba(0,0,0,0.08);display:inline-block">Choose Photos</div>
+            </label>
+          </div>
+          <div style="margin-top:10px" id="uploadPreview"></div>
+          <p class="small" style="margin-top:10px">Tip: Upload 4–8 photos (JPG/PNG). Logo will replace the left logo.</p>
+        </section>
+
+        <section class="card" style="margin-top:12px">
+          <h3>Color Themes</h3>
+          <p class="small">You can switch colors quickly. Changes apply to the entire site immediately.</p>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="primary" onclick="setTheme('')">Light</button>
+            <button class="primary" onclick="setTheme('dark-d1')">Dark Blue</button>
+            <button class="primary" onclick="setTheme('dark-d2')">Black</button>
+            <button class="primary" onclick="setTheme('dark-d3')">Purple</button>
+            <button class="primary" onclick="setTheme('dark-d4')">Green</button>
+          </div>
+        </section>
+      </div>
+    </div>
+  </section>
+
+  <!-- Teachers / Staff -->
+  <section id="teachers" class="card">
+    <h2>Teachers</h2>
+    <div class="grid">
+      <div class="card"><img class="thumb" src="https://via.placeholder.com/320x180?text=Mr.+Rao" alt=""><h4>Mr. R. Rao</h4><div class="small">Math Teacher</div></div>
+      <div class="card"><img class="thumb" src="https://via.placeholder.com/320x180?text=Ms.+Kaur" alt=""><h4>Ms. Kaur</h4><div class="small">Science</div></div>
+      <div class="card"><img class="thumb" src="https://via.placeholder.com/320x180?text=Mr.+Singh" alt=""><h4>Mr. Singh</h4><div class="small">Sports</div></div>
+      <div class="card"><img class="thumb" src="https://via.placeholder.com/320x180?text=Ms.+Asha" alt=""><h4>Ms. Asha</h4><div class="small">English</div></div>
+    </div>
+  </section>
+
+  <!-- Search & Student DB demo -->
+  <section id="search" class="card">
+    <h2>Student Search (Demo)</h2>
+    <p class="small">Search demo database by <strong>Name</strong> or <strong>Roll No</strong>. This works locally in the browser.</p>
+
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <input type="text" id="searchName" placeholder="Search by name">
+      <input type="text" id="searchRoll" placeholder="Search by roll no">
+      <button class="primary" onclick="searchStudents()">Search</button>
+    </div>
+
+    <div class="results" id="searchResults"></div>
+  </section>
+
+  <!-- Admission & Report Card (login gated) -->
+  <section id="reportcard" class="card">
+    <h2>Report Card / Admission Portal (Demo)</h2>
+    <p class="small">Students can view their report card by logging in with Student credentials. Teachers/Admin use a separate login.</p>
+
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="primary" onclick="openLogin('student')">Student Login</button>
+      <button class="primary" onclick="openLogin('admin')">Teacher/Admin Login</button>
+    </div>
+
+    <div id="reportArea" style="margin-top:12px"></div>
+  </section>
+
+  <!-- Contact + Map -->
+  <section id="contact" class="card">
+    <h2>Contact & Location</h2>
+    <div class="map-wrap">
+      <div style="flex:1;min-width:300px">
+        <p class="small">SVR Public School — Address (placeholder). Use the map to view the campus location.</p>
+        <p class="small">Phone: +91 XXXXX XXXXX • Email: info@svrpublicschool.example</p>
+        <p style="margin-top:6px">
+          <a id="mapsOpen" class="btn" href="https://maps.app.goo.gl/fVGna2ZjcVqghepf7" target="_blank" rel="noopener">Open in Google Maps</a>
+        </p>
+      </div>
+
+      <div class="map-frame" style="width:420px;min-width:300px;">
+        <!-- We use the short link you provided as iframe src. If browser blocks it, use the Open in Google Maps button above.
+             For a robust embed, open the share dialog in Google Maps and copy the "embed" src (the pb=... string).
+        -->
+        <iframe id="gmap" src="https://maps.app.goo.gl/fVGna2ZjcVqghepf7" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <small>© <span id="year"></span> SVR Public School — All rights reserved</small>
+</footer>
+
+<!-- Login Modal (simple client-side demo) -->
+<div id="loginModal" style="display:none;position:fixed;inset:0;background:rgba(2,6,23,0.5);align-items:center;justify-content:center;z-index:3000">
+  <div style="width:360px;max-width:90%;background:var(--card);padding:18px;border-radius:12px">
+    <h3 style="margin-top:0">Login</h3>
+    <div style="display:grid;gap:8px">
+      <select id="loginType">
+        <option value="student">Student</option>
+        <option value="admin">Teacher / Admin</option>
+      </select>
+      <input type="text" id="loginUser" placeholder="Username / Roll No">
+      <input type="password" id="loginPass" placeholder="Password">
+      <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:6px">
+        <button onclick="closeLogin()" style="padding:8px 10px;border-radius:8px">Cancel</button>
+        <button class="primary" onclick="performLogin()">Login</button>
+      </div>
+      <p class="small" style="margin:6px 0 0 0">Demo accounts: <strong>student1 / pass123</strong> (student) • <strong>admin / admin123</strong> (teacher)</p>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ---------- demo student DB ---------- */
+const students = [
+  {roll:'101', name:'Ansh Raj', class:'10', marks:{Math:88,Eng:76,Science:92}},
+  {roll:'102', name:'Priya Sharma', class:'9', marks:{Math:74,Eng:81,Science:78}},
+  {roll:'103', name:'Rohit Kumar', class:'8', marks:{Math:68,Eng:72,Science:70}},
+  {roll:'104', name:'Sara Khan', class:'10', marks:{Math:95,Eng:89,Science:94}}
+];
+
+/* ---------- search ---------- */
+function searchStudents(){
+  const name = document.getElementById('searchName').value.trim().toLowerCase();
+  const roll = document.getElementById('searchRoll').value.trim();
+  const results = students.filter(s => (name && s.name.toLowerCase().includes(name)) || (roll && s.roll === roll) );
+  const out = document.getElementById('searchResults');
+  if(!name && !roll){ out.innerHTML = '<p class="small">Please enter Name or Roll No to search.</p>'; return; }
+  if(results.length===0){ out.innerHTML = '<p class="small">No students found.</p>'; return; }
+
+  let html = '<table><thead><tr><th>Roll</th><th>Name</th><th>Class</th><th>Action</th></tr></thead><tbody>';
+  results.forEach(s=>{
+    html += `<tr><td>${s.roll}</td><td>${s.name}</td><td>${s.class}</td><td><button class="primary" onclick="showReport('${s.roll}')">View Report</button></td></tr>`;
+  });
+  html += '</tbody></table>';
+  out.innerHTML = html;
+}
+
+/* ---------- report display ---------- */
+function showReport(roll){
+  const s = students.find(x=>x.roll===roll);
+  if(!s){ alert('Student not found'); return; }
+  const area = document.getElementById('reportArea');
+  let marksHtml = '<table><thead><tr><th>Subject</th><th>Marks</th></tr></thead><tbody>';
+  Object.entries(s.marks).forEach(([sub,val])=> marksHtml += `<tr><td>${sub}</td><td>${val}</td></tr>`);
+  marksHtml += '</tbody></table>';
+  area.innerHTML = `<div class="card"><h3>${s.name} — Roll ${s.roll}</h3><p class="small">Class ${s.class}</p>${marksHtml}</div>`;
+  window.location.hash = '#reportcard';
+}
+
+/* ---------- simple client-side login (demo) ---------- */
+function openLogin(type){
+  document.getElementById('loginModal').style.display='flex';
+  document.getElementById('loginType').value = type || 'student';
+  document.getElementById('loginUser').value = '';
+  document.getElementById('loginPass').value = '';
+  document.getElementById('loginUser').focus();
+}
+function closeLogin(){ document.getElementById('loginModal').style.display='none'; }
+
+function performLogin(){
+  const type = document.getElementById('loginType').value;
+  const user = document.getElementById('loginUser').value.trim();
+  const pass = document.getElementById('loginPass').value.trim();
+  // demo credentials
+  if(type==='student' && ((user==='student1' && pass==='pass123') || students.some(s=>s.roll===user && pass==='pass123'))){
+    alert('Student login successful (demo). Showing report card area.');
+    // if roll provided show that student's report
+    const roll = students.some(s=>s.roll===user) ? user : '101';
+    showReport(roll);
+    closeLogin();
+    return;
+  }
+  if(type==='admin' && user==='admin' && pass==='admin123'){
+    alert('Admin login successful (demo). You can manage events & students.');
+    // show a small admin panel (demo)
+    document.getElementById('reportArea').innerHTML = `<div class="card"><h3>Admin Panel (Demo)</h3>
+      <p class="small">You can manage events and students (demo mode only).</p>
+      <button class="primary" onclick="editEvents()">Edit Events</button></div>`;
+    closeLogin();
+    return;
+  }
+  alert('Login failed — use demo credentials: student1/pass123 or admin/admin123');
+}
+
+/* ---------- admin events edit demo ---------- */
+function editEvents(){
+  const newMsg = prompt('Edit Principal message:', document.getElementById('principalMessage').innerText);
+  if(newMsg!==null){ document.getElementById('principalMessage').innerText = newMsg; }
+  const evt = prompt('Add a new event (format: Event — DD MMM):','New Sports Meet — 05 Feb');
+  if(evt){ const ul = document.getElementById('eventsList'); const li = document.createElement('li'); li.textContent = evt; ul.appendChild(li);}
+}
+
+/* ---------- slider logic ---------- */
+let slideIndex = 0;
+const slidesEl = document.getElementById('slides');
+const slidesCount = slidesEl.children.length;
+function showSlide(i){ slideIndex = (i + slidesCount) % slidesCount; slidesEl.style.transform = `translateX(-${slideIndex*100}%)`; }
+function nextSlide(){ showSlide(slideIndex+1); }
+function prevSlide(){ showSlide(slideIndex-1); }
+document.getElementById('next').addEventListener('click', nextSlide);
+document.getElementById('prev').addEventListener('click', prevSlide);
+let sliderTimer = setInterval(nextSlide, 4000);
+
+/* Pause on hover */
+document.querySelector('.slider').addEventListener('mouseenter', ()=>clearInterval(sliderTimer));
+document.querySelector('.slider').addEventListener('mouseleave', ()=>sliderTimer = setInterval(nextSlide,4000));
+
+/* ---------- uploads (client preview) ---------- */
+const logoInput = document.getElementById('logoInput');
+const photosInput = document.getElementById('photosInput');
+logoInput.addEventListener('change', e=>{
+  const f = e.target.files[0];
+  if(!f) return;
+  const url = URL.createObjectURL(f);
+  document.getElementById('site-logo').src = url;
+});
+photosInput.addEventListener('change', e=>{
+  const files = Array.from(e.target.files).slice(0,8);
+  const grid = document.getElementById('galleryGrid');
+  grid.innerHTML = ''; // replace placeholders
+  files.forEach(f=>{
+    const img = document.createElement('img');
+    img.className='thumb';
+    img.src = URL.createObjectURL(f);
+    const d = document.createElement('div'); d.className='card'; d.appendChild(img);
+    grid.appendChild(d);
+  });
+});
+
+/* hook uploadAssetsBtn to open file pickers */
+document.getElementById('uploadAssetsBtn').addEventListener('click', ()=>{ logoInput.click(); photosInput.click(); });
+
+/* ---------- theme / dark mode ---------- */
+const themeBtn = document.getElementById('themeToggle');
+let currentTheme = 'dark-d1'; // default chosen for you (D1)
+function setTheme(name){
+  // clear existing dark classes
+  document.documentElement.classList.remove('dark-d1','dark-d2','dark-d3','dark-d4');
+  if(name) document.documentElement.classList.add(name);
+  currentTheme = name;
+  themeBtn.innerText = name ? 'Dark Mode: ON' : 'Dark Mode: OFF';
+}
+themeBtn.addEventListener('click', ()=>{
+  if(document.documentElement.classList.contains('dark-d1')) setTheme('');
+  else setTheme('dark-d1');
+});
+setTheme(currentTheme);
+
+/* year */
+document.getElementById('year').innerText = new Date().getFullYear();
+
+/* open login quick */
+document.getElementById('openLogin').addEventListener('click', ()=>openLogin('student'));
+
+/* maps: the
